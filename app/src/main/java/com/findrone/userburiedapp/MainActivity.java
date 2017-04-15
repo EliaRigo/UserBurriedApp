@@ -6,58 +6,32 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
-import java.security.Permission;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Debug";
-
+    private final int PERMISSIONS_LOCATION = 0;
+    private final float meters = 0.01f;
+    private TextView txtGpsLastUpdate = null;
     private TextView txtLatitude = null;
     private TextView txtLongitude = null;
     private TextView txtRawLocation = null;
     private TextView txtAdvise = null;
-    private final int PERMISSIONS_LOCATION = 0;
-    private final float meters = 0.01f;
+    private ToggleButton tbService = null;
+    private Switch swWiFiConn = null;
     private LocationManager locationManager = null;
     private LocationListener locationListener = null;
-
-    /*----------Listener class to get coordinates ------------- */
-    private class MyLocationListener implements LocationListener {
-        @Override
-        public void onLocationChanged(Location loc) {
-            //Debug
-            String longitude = "Longitude: " + loc.getLongitude();
-            Log.v(TAG, longitude);
-            String latitude = "Latitude: " + loc.getLatitude();
-            Log.v(TAG, latitude);
-
-            txtLatitude.setText("Latitude: " + loc.getLatitude());
-            txtLongitude.setText("Longitude: " + loc.getLongitude());
-            txtRawLocation.setText(loc.toString());
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void onStatusChanged(String provider,
-                                    int status, Bundle extras) {
-            // TODO Auto-generated method stub
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -89,20 +63,74 @@ public class MainActivity extends AppCompatActivity {
         txtLongitude = (TextView) findViewById(R.id.txtLongitude);
         txtRawLocation = (TextView) findViewById(R.id.txtRawLocation);
         txtAdvise = (TextView) findViewById(R.id.txtAdvise);
+        txtGpsLastUpdate = (TextView) findViewById(R.id.txtGpsLastUpdate);
+        tbService = (ToggleButton) findViewById(R.id.tbService);
+        swWiFiConn = (Switch) findViewById(R.id.swWiFiConn);
+        if (swWiFiConn != null) {
+            swWiFiConn.setClickable(false);
+        }
         locationListener = new MyLocationListener();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        doThings();
+        tbService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    doThings();
+                } else {
+                    locationManager.removeUpdates(locationListener);
+                }
+            }
+        });
     }
 
     public void doThings() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_LOCATION);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, meters, locationListener);
+            //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, meters, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, meters, locationListener);
         }
     }
 
+    private String getDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+        return sdf.format(new Date());
+    }
+
+    /*----------Listener class to get coordinates ------------- */
+    private class MyLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location loc) {
+            //Debug
+            String longitude = "Longitude: " + loc.getLongitude();
+            Log.v(TAG, longitude);
+            String latitude = "Latitude: " + loc.getLatitude();
+            Log.v(TAG, latitude);
+
+            txtLatitude.setText("Latitude: " + loc.getLatitude());
+            txtLongitude.setText("Longitude: " + loc.getLongitude());
+            txtGpsLastUpdate.setText("GPS Last Update: " + getDateTime());
+            txtRawLocation.setText(loc.toString());
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void onStatusChanged(String provider,
+                                    int status, Bundle extras) {
+            // TODO Auto-generated method stub
+        }
+    }
 }
 
 
