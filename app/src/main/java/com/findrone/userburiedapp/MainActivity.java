@@ -17,6 +17,8 @@ import android.widget.ToggleButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private Switch swWiFiConn = null;
     private LocationManager locationManager = null;
     private LocationListener locationListener = null;
+    private int cntCheck = 0;
+    private float accuracy = Float.MAX_VALUE;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void doThings() {
-
+        final int stopAfter = 15000;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_LOCATION);
@@ -92,6 +96,34 @@ public class MainActivity extends AppCompatActivity {
             //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, meters, locationListener);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, meters, locationListener);
         }
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                cntCheck++;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        txtAdvise.setText("Accuracy: " + accuracy + "\nChecks : " +
+                                cntCheck + "\nStopAfer: " + stopAfter);
+                    }
+                });
+
+                if (accuracy <= 1.0) {
+                    locationManager.removeUpdates(locationListener);
+                    accuracy = Float.MAX_VALUE;
+                    cntCheck = 0;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tbService.setChecked(false);
+                        }
+                    });
+                    this.cancel();
+                }
+            }
+        }, 0, stopAfter);
     }
 
     private String getDateTime() {
@@ -107,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             String longitude = "Longitude: " + loc.getLongitude();
             Log.v(TAG, longitude);
             String latitude = "Latitude: " + loc.getLatitude();
+            accuracy = loc.getAccuracy();
             Log.v(TAG, latitude);
 
             txtLatitude.setText("Latitude: " + loc.getLatitude());
