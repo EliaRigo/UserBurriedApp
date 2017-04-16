@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
         Timer timer1 = new Timer();
         timer1.schedule(new TimerTask() {
             @Override
-            public void run() {
+            public void run() { //Timer to start GPS every 60 seconds
                 final int stopAfter = 15000;
                 runOnUiThread(new Runnable() {
                     @Override
-                    public void run() {
+                    public void run() { //LocationUpdates con be perform only on UiThread
                         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                                 ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_LOCATION);
@@ -109,11 +109,11 @@ public class MainActivity extends AppCompatActivity {
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
-                    public void run() {
+                    public void run() { //Timer to stop GPS after 15 seconds (if acc <= 10m)
                         cntCheck++;
                         runOnUiThread(new Runnable() {
                             @Override
-                            public void run() {
+                            public void run() { //You can upload Ui only in UiThread
                                 txtAdvise.setText("Accuracy: " + accuracy + "\nChecks : " +
                                         cntCheck + "\nStopAfer: " + stopAfter);
                             }
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                             cntCheck = 0;
                             runOnUiThread(new Runnable() {
                                 @Override
-                                public void run() {
+                                public void run() { //You can upload Ui only in UiThread
                                     tbService.setChecked(false);
                                 }
                             });
