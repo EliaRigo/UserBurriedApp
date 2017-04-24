@@ -7,6 +7,60 @@
     android:layout_height="match_parent"
     tools:context="com.findrone.userburiedapp.MainActivity">
 
+    <!--<TextView
+        android:id="@+id/txtInstructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Instructions:\n 1. This application allows you to be found from\n rescuers if you are buried under an avalanche\n 2. To work properly, this application requires\n that the phone has the battery fully charged,\n since it uses both GPS and WiFi modules for hours.\n Moreover the battery of the phone should last at\n least one day of non use, if the battery health is\n not good, the application can not work properly\n 3. During the use of FindroneApp do not use the\n phone to play games or surf on Internet, otherwise\n you will discharge the battery (and it may not last\n for all the time). You can take some pictures or make\n some calls, but remember to do not\n discharge too much the phone\n 4. We are not responsible if the phone will be\n completely discharged while you are still on the\n mountain if you do not follow the previous points\n 5. To use FindroneApp, you MUST agree with these points.\n We are interested to save your life and allow\n you to have fun on mountains. \n But remember, this application does not\n substitute the ARTVA system! Lastly, be careful, watch always the weather\n forecast and avoid to go on mountains if it is dangerous!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.024"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+    <ToggleButton
+        android:id="@+id/tbService"
+        android:layout_width="117dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="92dp"
+        android:autoText="false"
+        android:text="ToggleButton"
+        android:textOff="Start"
+        android:textOn="Stop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.975"
+        tools:layout_editor_absoluteY="427dp" />-->
+
+    <ToggleButton
+        android:id="@+id/tbService"
+        android:layout_width="117dp"
+        android:layout_height="68dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="92dp"
+        android:autoText="false"
+        android:text="ToggleButton"
+        android:textOff="Start"
+        android:textOn="Stop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.501" />
+
     <TextView
         android:id="@+id/txtAdvise"
         android:layout_width="wrap_content"
@@ -98,40 +152,6 @@
         app:layout_constraintTop_toBottomOf="@+id/txtWiFiLastUpdate"
         app:layout_constraintVertical_bias="0.060000002" />
 
-    <TextView
-        android:id="@+id/txtInstructions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Instructions:\n1.\n2.\n3."
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.027"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.018" />
-
-    <ToggleButton
-        android:id="@+id/tbService"
-        android:layout_width="134dp"
-        android:layout_height="87dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="92dp"
-        android:autoText="false"
-        android:text="ToggleButton"
-        android:textOff="Start"
-        android:textOn="Stop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.003" />
-
     <Switch
         android:id="@+id/swWiFiConn"
         android:layout_width="wrap_content"
@@ -157,5 +177,22 @@
         app:layout_constraintVertical_bias="0.06"
         tools:checked="false"
         tools:clickable="false" />
+
+    <Switch
+        android:id="@+id/sMoreInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="167dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:text="More Infos "
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/txtInstructions"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

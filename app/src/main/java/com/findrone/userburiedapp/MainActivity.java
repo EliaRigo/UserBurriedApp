@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener locationListener = null;
     private int cntCheck = 0;
     private float accuracy = Float.MAX_VALUE;
+    private final int minInMilliseconds = 60000;
+    private final int secInMilliseconds = 1000;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         timer1.schedule(new TimerTask() {
             @Override
             public void run() { //Timer to start GPS every 60 seconds
-                final int stopAfter = 15000;
+                final int stopAfter = 30 * secInMilliseconds;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() { //LocationUpdates con be perform only on UiThread
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() { //You can upload Ui only in UiThread
                                 txtAdvise.setText("Accuracy: " + accuracy + "\nChecks : " +
-                                        cntCheck + "\nStopAfer: " + stopAfter);
+                                        cntCheck + "\nStopAfter: " + stopAfter);
                             }
                         });
 
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, 0, stopAfter);
             }
-        }, 0, 60000);
+        }, 0, 2 * minInMilliseconds);
     }
 
     private String getDateTime() {
@@ -146,16 +148,19 @@ public class MainActivity extends AppCompatActivity {
     private class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location loc) {
-            //Debug
-            String longitude = "Longitude: " + loc.getLongitude();
-            Log.v(TAG, longitude);
-            String latitude = "Latitude: " + loc.getLatitude();
             accuracy = loc.getAccuracy();
-            Log.v(TAG, latitude);
+
+            //Debug
+            String latitude = "Latitude: " + loc.getLatitude();
+            String longitude = "Longitude: " + loc.getLongitude();
+            String timestamp = getDateTime();
+
+            Log.v(TAG, String.format("Timestamp: %1$s, Latitude: %2$s, Longitude: %3$s, Accuracy: %4$s",
+                    timestamp, latitude, longitude, accuracy));
 
             txtLatitude.setText("Latitude: " + loc.getLatitude());
             txtLongitude.setText("Longitude: " + loc.getLongitude());
-            txtGpsLastUpdate.setText("GPS Last Update: " + getDateTime());
+            txtGpsLastUpdate.setText("GPS Last Update: " + timestamp);
             txtRawLocation.setText(loc.toString());
         }
 
