@@ -15,6 +15,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -55,8 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private ToggleButton tbService = null;
     private Switch swWiFiConn = null;
     //WiFi
-    private String networkSSID = "-";
-    private String networkPass = "-";
+    private String networkSSID = "DroneAP";
+    private String networkPass = "";
+    private boolean connected = false;
     private WifiManager wifiManager = null;
     private WifiConfiguration conf = new WifiConfiguration();
     //Location
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener locationListener = null;
     private int cntCheck = 0;
     private float accuracy = Float.MAX_VALUE;
+    private String lastKnownPosition = "";
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -160,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-                        if (accuracy <= 10.0) {
-                            locationManager.removeUpdates(locationListener);
+                        if (accuracy <= 10.0 && !connected) {
+                            //Not Connected to any network shutdown services
                             accuracy = Float.MAX_VALUE;
                             cntCheck = 0;
                             runOnUiThread(new Runnable() {
@@ -185,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
             public void run() { //Timer to start and connect via WiFi every 60 seconds
                 // Please note the quotes. String should contain ssid in quotes
                 conf.SSID = "\"" + networkSSID + "\"";
-                conf.preSharedKey = "\"" + networkPass + "\"";
-                //conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE); //For Open Network
+                //conf.preSharedKey = "\"" + networkPass + "\"";
+                conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE); //For Open Network
                 wifiManager.setWifiEnabled(true); //With peace and love we drain your battery life <3
 
                 List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
@@ -236,18 +239,35 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             if (socket == null || out == null) {
                                 //Initialize socket
-                                socket = new Socket("192.168.1.200", 9119);
+                                int appAddress = wifiInfo.getIpAddress();
+                                String ipAddress = Formatter.formatIpAddress(appAddress);
+                                String[] ipArrayAddress = ipAddress.split("\\.");
+                                String droneAddress = ipArrayAddress[0] + "." + ipArrayAddress[1] + "." + ipArrayAddress[2] + "." + "200";
+                                Log.v(TAG, droneAddress);
+                                socket = new Socket(String.valueOf(droneAddress), 9119);
                                 out = new PrintWriter(socket.getOutputStream(), true);
+                                if (lastKnownPosition != null) {
+                                    sendToPI(lastKnownPosition);
+                                }
                             }
-                            sendToPI("WiFi Power: " + wifiInfo.getRssi() + " dB");
+                            sendToPI("signal_strength:value=" + wifiInfo.getRssi());
+                            connected = true;
                         } catch (IOException e) {
+                            connected = false;
                             e.printStackTrace();
                             //Force reconnect
                             try {
-                                socket = new Socket("192.168.1.200", 9119);
+                                int appAddress = wifiInfo.getIpAddress();
+                                String ipAddress = Formatter.formatIpAddress(appAddress);
+                                String[] ipArrayAddress = ipAddress.split("\\.");
+                                String droneAddress = ipArrayAddress[0] + "." + ipArrayAddress[1] + "." + ipArrayAddress[2] + "." + "1";
+                                Log.v(TAG, droneAddress);
+                                socket = new Socket(String.valueOf(droneAddress), 9119);
                                 out = new PrintWriter(socket.getOutputStream(), true);
+                                connected = true;
                             } catch (IOException e2) {
                                 e2.printStackTrace();
+                                connected = false;
                             }
                             //Toast.makeText(getApplicationContext(), "Too fast ?", Toast.LENGTH_SHORT);
                         }
@@ -281,16 +301,16 @@ public class MainActivity extends AppCompatActivity {
             String longitude = Double.toString(loc.getLongitude());
             String timestamp = getDateTime();
 
-            String sSend = String.format("Timestamp: %1$s, Latitude: %2$s, Longitude: %3$s, Accuracy: %4$s",
-                    timestamp, latitude, longitude, accuracy);
-            Log.v(TAG, sSend);
+            lastKnownPosition = String.format("position:latitude=%1$s;longitude=%2$s;accuracy:%3$s;timestamp:%4$s",
+                    latitude, longitude, accuracy, timestamp);
+            //Log.v(TAG, sSend);
 
             txtLatitude.setText("Latitude: " + loc.getLatitude());
             txtLongitude.setText("Longitude: " + loc.getLongitude());
             txtGpsLastUpdate.setText("GPS Last Update: " + timestamp);
             txtRawLocation.setText(loc.toString());
 
-            sendToPI(sSend);
+            sendToPI(lastKnownPosition);
         }
 
         @Override
