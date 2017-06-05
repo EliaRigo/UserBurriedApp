@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtInstructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Instructions:\n 1. This application allows you to be found from\n rescuers if you are buried under an avalanche\n 2. To work properly, this application requires\n that the phone has the battery fully charged,\n since it uses both GPS and WiFi modules for hours.\n Moreover the battery of the phone should last at\n least one day of non use, if the battery health is\n not good, the application can not work properly\n 3. During the use of FindroneApp do not use the\n phone to play games or surf on Internet, otherwise\n you will discharge the battery (and it may not last\n for all the time). You can take some pictures or make\n some calls, but remember to do not\n discharge too much the phone\n 4. We are not responsible if the phone will be\n completely discharged while you are still on the\n mountain if you do not follow the previous points\n 5. To use FindroneApp, you MUST agree with these points.\n We are interested to save your life and allow\n you to have fun on mountains. \n But remember, this application does not\n substitute the ARTVA system! Lastly, be careful, watch always the weather\n forecast and avoid to go on mountains if it is dangerous!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.024" />
+
+    <Button
+        android:id="@+id/btnAccpet"
+        android:layout_width="173dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:text="I accept"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/btnDoNotAccept"
+        android:layout_width="169dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:text="I do not accept"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

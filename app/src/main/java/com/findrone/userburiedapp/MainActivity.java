@@ -1,7 +1,10 @@
 package com.findrone.userburiedapp;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,10 +16,13 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -31,6 +37,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+
+/**
+ * I do not like this code but I think
+ * it is enough to pass my exams
+ * Cheers <3
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     Timer timer1 = null;
     Timer timer2 = null;
     Timer timer3 = null;
+    //Activity Main
+    private int boolMoreInfos = View.INVISIBLE;
     private TextView txtGpsLastUpdate = null;
     private TextView txtLatitude = null;
     private TextView txtLongitude = null;
@@ -55,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtWiFiLastUpdate = null;
     private ToggleButton tbService = null;
     private Switch swWiFiConn = null;
+    private Switch swMoreInfos = null;
+
+    //Activity EULA
+    private Button btnAccept = null;
+    private Button btnDoNotAccpet = null;
     //WiFi
     private String networkSSID = "DroneAP";
     private String networkPass = "";
@@ -65,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationManager locationManager = null;
     private LocationListener locationListener = null;
     private int cntCheck = 0;
+    private int cntSendGps = 0;
     private float accuracy = Float.MAX_VALUE;
     private String lastKnownPosition = "";
 
@@ -92,41 +112,86 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_eula);
 
-        txtLatitude = (TextView) findViewById(R.id.txtLatitude);
-        txtLongitude = (TextView) findViewById(R.id.txtLongitude);
-        txtRawLocation = (TextView) findViewById(R.id.txtRawLocation);
-        txtAdvise = (TextView) findViewById(R.id.txtAdvise);
-        txtGpsLastUpdate = (TextView) findViewById(R.id.txtGpsLastUpdate);
-        txtWiFiLastUpdate = (TextView) findViewById(R.id.txtWiFiLastUpdate);
-        tbService = (ToggleButton) findViewById(R.id.tbService);
-        swWiFiConn = (Switch) findViewById(R.id.swWiFiConn);
-        if (swWiFiConn != null) {
-            swWiFiConn.setClickable(false);
-        }
-        locationListener = new MyLocationListener();
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        //Activity EULA
+        btnAccept = (Button) findViewById(R.id.btnAccpet);
 
-        tbService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    doThings();
-                    doThings2();
-                    doThings3();
-                } else {
-                    locationManager.removeUpdates(locationListener);
-                    if (timer1 != null) {
-                        timer1.cancel();
-                    }
-                    if (timer2 != null) {
-                        timer2.cancel();
-                    }
-                    if (timer3 != null) {
-                        timer3.cancel();
-                    }
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Activity Main
+                setContentView(R.layout.activity_main);
+                txtLatitude = (TextView) findViewById(R.id.txtLatitude);
+                txtLongitude = (TextView) findViewById(R.id.txtLongitude);
+                txtRawLocation = (TextView) findViewById(R.id.txtRawLocation);
+                txtAdvise = (TextView) findViewById(R.id.txtAdvise);
+                txtGpsLastUpdate = (TextView) findViewById(R.id.txtGpsLastUpdate);
+                txtWiFiLastUpdate = (TextView) findViewById(R.id.txtWiFiLastUpdate);
+                tbService = (ToggleButton) findViewById(R.id.tbService);
+                swWiFiConn = (Switch) findViewById(R.id.swWiFiConn);
+                if (swWiFiConn != null) {
+                    swWiFiConn.setClickable(false);
                 }
+                swMoreInfos = (Switch) findViewById(R.id.swMoreInfos);
+                if (swMoreInfos != null) {
+                    swMoreInfos.setChecked(false);
+                }
+                swMoreInfos.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (boolMoreInfos == View.INVISIBLE) {
+                            boolMoreInfos = View.VISIBLE;
+                            txtAdvise.setVisibility(View.VISIBLE);
+                            txtLatitude.setVisibility(View.VISIBLE);
+                            txtLongitude.setVisibility(View.VISIBLE);
+                            txtRawLocation.setVisibility(View.VISIBLE);
+                            txtGpsLastUpdate.setVisibility(View.VISIBLE);
+                            txtWiFiLastUpdate.setVisibility(View.VISIBLE);
+                            swWiFiConn.setVisibility(View.VISIBLE);
+                        } else {
+                            boolMoreInfos = View.INVISIBLE;
+                            txtAdvise.setVisibility(View.INVISIBLE);
+                            txtLatitude.setVisibility(View.INVISIBLE);
+                            txtLongitude.setVisibility(View.INVISIBLE);
+                            txtRawLocation.setVisibility(View.INVISIBLE);
+                            txtGpsLastUpdate.setVisibility(View.INVISIBLE);
+                            txtWiFiLastUpdate.setVisibility(View.INVISIBLE);
+                            swWiFiConn.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
+                locationListener = new MyLocationListener();
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
+                tbService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            doThings();
+                            doThings2();
+                            doThings3();
+                        } else {
+                            locationManager.removeUpdates(locationListener);
+                            if (timer1 != null) {
+                                timer1.cancel();
+                            }
+                            if (timer2 != null) {
+                                timer2.cancel();
+                            }
+                            if (timer3 != null) {
+                                timer3.cancel();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        btnDoNotAccpet = (Button) findViewById(R.id.btnDoNotAccept);
+        btnDoNotAccpet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.exit(0);
             }
         });
     }
@@ -145,6 +210,26 @@ public class MainActivity extends AppCompatActivity {
                             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_LOCATION);
                         } else {
                             tbService.setChecked(true);
+                            //Check if Setting are in High Accuracy
+                            try {
+                                int status = Settings.Secure.getInt(getApplicationContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
+                                if (status < 3) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                    builder.setMessage("It seems that High Accuracy is not enabled on thi device." +
+                                            "Now you will be prompted to the GPS Setting please enable GPS and set it to \"High Accuracy\"")
+                                            .setCancelable(false)
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                                }
+                                            });
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
+                            } catch (Settings.SettingNotFoundException e) {
+                                e.printStackTrace();
+                            }
+
                             //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, meters, locationListener);
                             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, meters, locationListener);
                         }
@@ -153,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
-                    public void run() { //Timer to stop GPS after 15 seconds (if acc <= 10m)
+                    public void run() { //Timer to stop GPS after 30 seconds (if acc <= 10m)
                         cntCheck++;
                         runOnUiThread(new Runnable() {
                             @Override
@@ -251,6 +336,11 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                             sendToPI("signal_strength:value=" + wifiInfo.getRssi());
+                            cntSendGps++;
+                            if (cntSendGps == 10) {
+                                sendToPI(lastKnownPosition);
+                                cntSendGps = 0;
+                            }
                             connected = true;
                         } catch (IOException e) {
                             connected = false;
@@ -264,6 +354,9 @@ public class MainActivity extends AppCompatActivity {
                                 Log.v(TAG, droneAddress);
                                 socket = new Socket(String.valueOf(droneAddress), 9119);
                                 out = new PrintWriter(socket.getOutputStream(), true);
+                                if (lastKnownPosition != null) {
+                                    sendToPI(lastKnownPosition);
+                                }
                                 connected = true;
                             } catch (IOException e2) {
                                 e2.printStackTrace();
@@ -310,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
             txtGpsLastUpdate.setText("GPS Last Update: " + timestamp);
             txtRawLocation.setText(loc.toString());
 
-            sendToPI(lastKnownPosition);
+            //sendToPI(lastKnownPosition); //Possible interfering with WiFi Signal
         }
 
         @Override
