@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                                 int status = Settings.Secure.getInt(getApplicationContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
                                 if (status < 3) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                                    builder.setMessage("It seems that High Accuracy is not enabled on thi device." +
+                                    builder.setMessage("It seems that High Accuracy is not enabled on this device." +
                                             "Now you will be prompted to the GPS Setting please enable GPS and set it to \"High Accuracy\"")
                                             .setCancelable(false)
                                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {

@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="com.findrone.userburiedapp.MainActivity">
 
     <!--<TextView
@@ -51,6 +52,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="92dp"
         android:autoText="false"
+        android:background="@drawable/rounded_button_blue"
         android:text="ToggleButton"
         android:textOff="Start"
         android:textOn="Stop"
