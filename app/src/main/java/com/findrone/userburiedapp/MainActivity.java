@@ -335,7 +335,9 @@ public class MainActivity extends AppCompatActivity {
                                     sendToPI(lastKnownPosition);
                                 }
                             }
-                            sendToPI("signal_strength:value=" + wifiInfo.getRssi());
+                            String tmp = "signal_strength:value=" + wifiInfo.getRssi();
+                            //Log.v(TAG,tmp.length()+"");
+                            sendToPI(tmp);
                             cntSendGps++;
                             if (cntSendGps == 10) {
                                 sendToPI(lastKnownPosition);
@@ -350,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
                                 int appAddress = wifiInfo.getIpAddress();
                                 String ipAddress = Formatter.formatIpAddress(appAddress);
                                 String[] ipArrayAddress = ipAddress.split("\\.");
-                                String droneAddress = ipArrayAddress[0] + "." + ipArrayAddress[1] + "." + ipArrayAddress[2] + "." + "1";
+                                String droneAddress = ipArrayAddress[0] + "." + ipArrayAddress[1] + "." + ipArrayAddress[2] + "." + "200";
                                 Log.v(TAG, droneAddress);
                                 socket = new Socket(String.valueOf(droneAddress), 9119);
                                 out = new PrintWriter(socket.getOutputStream(), true);
@@ -393,9 +395,10 @@ public class MainActivity extends AppCompatActivity {
             String latitude = Double.toString(loc.getLatitude());
             String longitude = Double.toString(loc.getLongitude());
             String timestamp = getDateTime();
+            String sAccuracy = String.valueOf(accuracy);
 
             lastKnownPosition = String.format("position:latitude=%1$s;longitude=%2$s;accuracy:%3$s;timestamp:%4$s",
-                    latitude, longitude, accuracy, timestamp);
+                    latitude, longitude, sAccuracy, timestamp);
             //Log.v(TAG, sSend);
 
             txtLatitude.setText("Latitude: " + loc.getLatitude());
