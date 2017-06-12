@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
                                 int appAddress = wifiInfo.getIpAddress();
                                 String ipAddress = Formatter.formatIpAddress(appAddress);
                                 String[] ipArrayAddress = ipAddress.split("\\.");
-                                String droneAddress = ipArrayAddress[0] + "." + ipArrayAddress[1] + "." + ipArrayAddress[2] + "." + "200";
+                                String droneAddress = ipArrayAddress[0] + "." + ipArrayAddress[1] + "." + ipArrayAddress[2] + "." + "1";
                                 Log.v(TAG, droneAddress);
                                 socket = new Socket(String.valueOf(droneAddress), 9119);
                                 out = new PrintWriter(socket.getOutputStream(), true);
@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
                                 int appAddress = wifiInfo.getIpAddress();
                                 String ipAddress = Formatter.formatIpAddress(appAddress);
                                 String[] ipArrayAddress = ipAddress.split("\\.");
-                                String droneAddress = ipArrayAddress[0] + "." + ipArrayAddress[1] + "." + ipArrayAddress[2] + "." + "200";
+                                String droneAddress = ipArrayAddress[0] + "." + ipArrayAddress[1] + "." + ipArrayAddress[2] + "." + "1";
                                 Log.v(TAG, droneAddress);
                                 socket = new Socket(String.valueOf(droneAddress), 9119);
                                 out = new PrintWriter(socket.getOutputStream(), true);

@@ -5,9 +5,20 @@
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="123dp"
+        android:layout_height="77dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="-3dp"
+        android:gravity="center|center_vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/findrone_logo_transparent" />
+
     <TextView
         android:id="@+id/txtInstructions"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -19,21 +30,23 @@
         android:ellipsize="none"
         android:maxLines="100"
         android:scrollHorizontally="false"
-        android:text="Instructions:\n1. This application allows you to be found from rescuers if you are buried under an avalanche.\n2. To work properly, this application requires that the phone has the battery fully charged, since it uses both GPS and WiFi modules for hours. Moreover the battery of the phone should last at least one day of non use, if the battery health is not good, the application can not work properly.\n3. During the use of FindroneApp do not use the phone to play games or surf on Internet, otherwise you will discharge the battery (and it may not last for all the time). You can take some pictures or make some calls, but remember to do not discharge too much the phone.4. We are not responsible if the phone will be completely discharged while you are still on the mountain if you do not follow the previous points.\n5. To use FindroneApp, you MUST agree with these points. We are interested to save your life and allow you to have fun on mountains.\nBut remember, this application does not substitute the ARTVA system!\nLastly, be careful, watch always the weather forecast and avoid to go on mountains if it is dangerous!"
+        android:text="1. This application allows you to be found from rescuers if you are buried under an avalanche.\n2. To work properly, this application requires that the phone has the battery fully charged, since it uses both GPS and WiFi modules for hours. Moreover the battery of the phone should last at least one day of non use, if the battery health is not good, the application can not work properly.\n3. During the use of FindroneApp do not use the phone to play games or surf on Internet, otherwise you will discharge the battery (and it may not last for all the time). You can take some pictures or make some calls, but remember to do not discharge too much the phone.4. We are not responsible if the phone will be completely discharged while you are still on the mountain if you do not follow the previous points.\n5. To use FindroneApp, you MUST agree with these points. We are interested to save your life and allow you to have fun on mountains.\nBut remember, this application does not substitute the ARTVA system!\nLastly, be careful, watch always the weather forecast and avoid to go on mountains if it is dangerous!"
+        android:textColor="@android:color/black"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.495" />
 
     <Button
         android:id="@+id/btnAccpet"
         android:layout_width="160dp"
-        android:layout_height="44dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:background="@drawable/rounded_button_green"
         android:text="I agree"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,12 +55,26 @@
     <Button
         android:id="@+id/btnDoNotAccept"
         android:layout_width="160dp"
-        android:layout_height="44dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="@drawable/rounded_button_red"
         android:text="I do not agree"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="29dp"
+        android:text="Instructions"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
