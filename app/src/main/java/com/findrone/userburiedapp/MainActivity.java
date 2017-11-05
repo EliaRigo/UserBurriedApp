@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
                             //Log.v(TAG,tmp.length()+"");
                             sendToPI(tmp);
                             cntSendGps++;
-                            if (cntSendGps == 10) {
+                            if (cntSendGps == 2) {
                                 sendToPI(lastKnownPosition);
                                 cntSendGps = 0;
                             }
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        }, 0, 100);
+        }, 0, 500);
     }
 
     private String getDateTime() {
